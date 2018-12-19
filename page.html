@@ -1,0 +1,61 @@
+<html><head>
+<script type="text/javascript">
+
+function httpPost(url, payload, callback)
+{
+	let request = new XMLHttpRequest();
+	request.onreadystatechange = function()
+	{
+		if(request.readyState == 4)
+		{
+			if(request.status == 200)
+			callback(request.responseText);
+			else
+			{
+				if(request.status == 0 && request.statusText.length == 0)
+					alert("Connection failed");
+				else
+					alert("Server returned status " + request.status + ", " + request.statusText);
+			}
+		}
+	};
+	request.open('post', url, true);
+	request.setRequestHeader('Content-Type',
+	'application/x-www-form-urlencoded');
+	request.send(payload);
+}
+
+function cb(response)
+{
+	alert("The back-end server replied: " + response);
+
+	// Parse the JSON
+	let ob = JSON.parse(response);
+
+	alert("The server's favorite number is: " + ob.fav_num);
+}
+
+function sayhi()
+{
+	// Find the text field
+	let msg = document.getElementById("mymessage");
+
+	// Make a JSON blob
+	let ob = {};
+	ob.message = msg.value;
+	ob.fav_num = 3.14159;
+	let json_string = JSON.stringify(ob);
+
+	// Send the JSON blob to the server
+	httpPost("ajax_handler.html", json_string, cb);
+}
+
+
+</script>
+</head><body>
+Here is a picture of a turtle:
+<img src="turtle.png"><br><br>
+And here is a place to enter a message:<br>
+  <input type="text" id="mymessage" value="hi">
+  <input type="button" onclick="sayhi();" value="send">
+</body></html>

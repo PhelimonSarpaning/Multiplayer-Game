@@ -1,0 +1,1247 @@
+
+<!-- saved from url=(0065)http://csce.uark.edu/~mgashler/paradigms/2018_fall/a7/turtle.html -->
+<html class="gr__csce_uark_edu"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Turtle Attack!</title>
+	
+</head>
+<body data-gr-c-s-loaded="true">
+	<!--<audio autoplay>
+  <source src="./song.mp3" type="audio/mpeg">
+</audio>-->
+<br>
+<canvas id="myCanvas" width="1000" height="500" style="border:1px solid #cccccc; background-image: url(./mario10.jpg);"></canvas>
+
+<script type="text/javascript">
+	var myId = -1;
+ var increment = 0;
+ var incoming_x = 0;
+ var incoming_tx = 0;
+ let mdest_x=0;
+ let mdest_y=0;
+ let new_Dest = 0;
+ let turtle_Destx = 0;
+ let message = " ";
+ var mess_value = 0;
+ var message_count =0;
+ var other_message =" ";
+ var message_array = [];
+ var message_new ="";
+ var count=0;
+ var mess_id=0;
+       
+ function httpPost (url, payload, callback){
+	let request = new XMLHttpRequest();
+	request.onreadystatechange = function()
+	{
+		if(request.readyState == 4)
+		{
+			if(request.status == 200)
+			callback(request.responseText);
+			else
+			{
+				if(request.status == 0 && request.statusText.length == 0)
+					alert("Connection failed");
+				else
+					alert("Server returned status " + request.status + ", " + request.statusText);
+			}
+		}
+
+	};
+	request.open('post', url, true);
+	request.setRequestHeader('Content-Type',
+	'application/x-www-form-urlencoded');
+	console.log("payload" + payload);
+	request.send(payload);
+    }
+
+
+
+ 
+	function cb(response){
+	//alert("The back-end server replied: " + response);
+
+	// Parse the JSON
+	let ob = JSON.parse(response);
+	console.log("the message voming in is " + ob.new_mess);
+
+	mess_value = ob.mess_value;
+    
+	//alert("The server's favorite number is: " + ob.fav_num);
+	if(mess_value == 0){
+	    myId = ob.my_id;
+	    incoming_x = ob.dx;
+	    incoming_tx = ob.fav_num;
+	    mess_id = ob.from_player
+
+	    //other_message = ob.send_mess;
+
+	    //addMessage(ob.send_mess);
+	    if(ob.new_mess===undefined){
+	    	other_message = ob.send_mess;
+          }
+	    else{
+	    	console.log("my other user message is " + ob.send_mess);
+	    	if(ob.new_mess!==undefined){
+	    	 if(ob.new_mess !== message_new){
+                addPlayerOther(mess_id);
+	    	 	addMessage(ob.new_mess);
+	    	 	message_new = ob.new_mess;
+	    	 }
+	    	 
+              
+	    	}
+	    }
+	}
+	else if(ob.diff_change == 0) {
+          if(ob.new_mess!==undefined){
+	    	 if(ob.new_mess !== message_new){
+	    	 
+                addPlayer(mess_id);
+                addMessage(ob.new_mess);
+	    	 	message_new = ob.new_mess;
+	    	 }
+	    	}
+	    }
+	
+	    
+	    
+	    
+	    
+	    
+        console.log("my actual transfer incoming_x is " + incoming_x);
+        console.log("my transferr function turtle is  with id  " + myId + "  " +  turtle_Destx);
+	   if (incoming_x >  new_Dest) {
+	   	
+	   	Mario.prototype.set_destination(incoming_x, 0);
+	   } 
+	   
+	   if(incoming_tx > turtle_Destx){
+	   	Turtle.prototype.set_destination(incoming_tx,0);
+	   }
+	  
+       
+            
+	    //console.log("my mario new transferres is  " + incoming_x);
+	    //alert(myId);
+	    //console.log("The number is " + myId);
+	
+
+
+
+	if(mess_value == 1){
+       if(mess_value == 1){
+	    	message = ob.incoming_mess;
+	    	console.log("The message is  i actusaluu sent " + message);
+	    	 if(message === undefined){
+
+	   }
+	   else if(message === " "){
+
+	   }
+	   else{
+	   	if(ob.new_mess !== message_new){
+	   			addPlayer(myId);
+	    	 	addMessage(ob.new_mess);
+	    	 	message_new = ob.new_mess;
+	    	 }
+	   
+	   	//message_array.push(ob.new_mess);
+	   	//addMessage(ob.incoming_mess);
+	   }
+	}
+      }
+
+  }
+  
+
+
+
+
+
+      class Set{
+      	constructor(){
+             
+      	}
+       setup(dest_x, dest_y){
+             new_Dest = dest_x;
+             console.log("my transferr function is  " + new_Dest);
+      }
+    }
+
+      class SetT{
+      	constructor(){
+             
+      	}
+       setup(dest_x, dest_y){
+             turtle_Destx = dest_x;
+             console.log("my transferr function turtle is  " + turtle_Destx);
+      }
+    }
+
+ class Sayhi
+{   
+	constructor(){
+
+	}
+	update(){
+
+	// Make a JSON blob
+	let ob = {};
+	var checker =0;
+	
+	/*let msg = " " ;
+	ob.message = " ";
+	//console.log("the going message is " + msg.value);*/
+     
+	
+	ob.my_id = myId;
+	ob.fav_num =turtle_Destx;
+	ob.dx = new_Dest;
+	ob.checker = checker;
+	ob.mess_value = mess_value;
+	//ob.tx = 1;
+	console.log("going new turtle is " + ob.fav_num);
+	console.log("My actual going in send x is " + ob.dx);
+	ob.dy = mdest_y;
+     
+
+	console.log("The going number is " + myId);
+	let json_string = JSON.stringify(ob);
+	
+       //alert(ob.ID);
+
+	// Send the JSON blob to the server
+	httpPost("ajax_handler.html", json_string, cb);
+	
+     }
+}
+class Sprite
+{
+	constructor(x, y, image_url, update_method, onclick_method)
+	{
+		this.x = x;
+		this.y = y;
+		this.image = new Image();
+		this.image.src = image_url;
+		this.update = update_method;
+		this.onclick = onclick_method;
+	}
+
+	
+	
+}
+
+
+
+class Mario
+{       
+	constructor(x, y, update_method,onclick_method)
+	{   
+		this.x = x;
+		this.y = y;
+		
+		this.update = update_method;
+		this.onclick = onclick_method;
+		var json = {"sprites":[{"type":"Mario","x":0,"y":500,"w":60,"h":95,"vert_vel":581.9999999999992},{
+	"type":"Brick","x":151,"y":280,"w":157,"h":97},
+	{"type":"Coinblocks","x":425,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":638,"y":276,"w":109,"h":48},{"type":"Brick","x":1338,"y":276,"w":109,"h":48},
+	{"type":"Coinblocks","x":1525,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":1925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":1925,"y":310,"w":109,"h":48}]};
+
+		this.obj = json.sprites;
+		this.count =0; 
+		//this.cameraPos = 0;
+	}
+	drawMario(n){
+		if(n==0){
+		//ensures that mario is able to get 1st image if user has not preesed right key
+		this.x = n;
+		this.marioImages= [ "mario1.png", "mario2.png", "mario3.png"];
+		this.imagemario = this.marioImages[this.x];
+		this.x++;
+		this.image = new Image();
+		this.image.src = this.imagemario;
+	}
+		
+	else{
+		this.actual = this.x + n; // finds the destination of mario by getting its x value and increment of movement
+		this.marioImages= [ "mario1.png", "mario2.png", "mario3.png","mario4.png","mario5.png"];//array of image urls
+		this.x+=1;
+		this.draw = Math.abs((this.actual/20)*10); //finds absolute and multiplies by 10 to make it a single value
+		if(this.actual >5)//checks if we've got array limit
+		this.x =0;
+		this.imagemario = this.marioImages[this.draw];
+		this.x++;
+		this.image = new Image();
+		this.image.src = this.imagemario;
+		}
+		
+	}
+	set_destination(x, y)
+	{
+		this.dest_x = x;
+		this.dest_y = y;
+		//Mario.prototype.set_destination(x,y);
+	}
+
+	ignore_click(x, y)
+	{
+	}
+
+	move(dx, dy)
+	{    
+         
+      
+		this.dest_x = this.x + dx;
+		console.log("my transfer dest is " + this.dest_x);
+		this.dest_y = this.y + dy;
+
+		Set.prototype.setup(this.dest_x,this.dest_y);
+		//mdest_x = this.dest_x;
+		//mdest_y = this.dest_y
+        
+
+	}
+   //mario movement up and down
+	update(){
+
+        this.vert_vel = 5;
+             
+		if(this.y<=400){
+			this.y += this.vert_vel;
+		 			
+		 }
+		 this.vert_vel=0;
+		if(this.dest_x === undefined)
+			return;
+
+		if(this.x < this.dest_x){
+			this.x+=2;
+			let move = new Model();
+			move.cameraPos = this.x -180;
+		}
+		else if(this.x > this.dest_x)
+			this.x--;
+		if(this.y < this.dest_y)
+			this.y++;
+		else if(this.y > this.dest_y)
+			this.y--;
+	}
+	//controls mario jumping
+  jump(dvert_vel,response){
+		//alert(response);
+     if(response==true){
+
+		this.vert_vel += dvert_vel;
+		this.y +=this.vert_vel;
+		let my_model = new Model();
+		this.count++;
+              //console.log("countingg" + this.count);
+
+		for (let i=0; i<my_model.sprites.length; i++ ){
+              let b = my_model.sprites[i];
+
+              //alert(b.type);
+              if(b instanceof Brick){
+              	//alert(JSON.stringify(b));
+              	//alert(b.x);
+                  for(let j=0; j<this.obj.length; j++){
+		if(this.obj[j].type == "Brick"){
+				//console.log(this.obj[j].x);
+			let x = this.obj[j].x;
+			let y = this.obj[j].y;
+			let w = this.obj[j].w;
+			let h = this.obj[j].h;
+    
+            if(Mario.prototype.marioCollides(x,y,w,h)){
+                    /*console.log("my dest_x" + this.dest_x);
+                    console.log("my dest_y" + this.dest_y);
+                    console.log("my y" + y);
+                    console.log(" my x " + x);*/
+
+                if(this.dest_x > x && this.dest_x < x + w && this.dest_y > y && y < this.dest_y+ h ) {
+                	//alert(this.y);
+                	//if(this.y>=y)
+                	this.y +=10;
+                     this.y=340;
+                     drawMario(4);
+                    // alert(" new " + this.y);
+                     
+            }
+
+
+               /*if(this.y <= y  ){
+                 //alert(" i hit ");
+   	             this.y+=50;
+                 }
+                }*/
+
+			}
+		}
+            
+            if(this.obj[j].type == "Coinblocks"){
+				//console.log(this.obj[j].x);
+
+			let x = this.obj[j].x;
+			let y = this.obj[j].y;
+			let w = this.obj[j].w;
+			let h = this.obj[j].h;
+    
+            if(Mario.prototype.marioCollides(x,y,w,h)){
+                    /*console.log("my dest_x" + this.dest_x);
+                    console.log("my dest_y" + this.dest_y);
+                    console.log("my y" + y);
+                    console.log(" my x " + x);*/
+
+                 //if(response==true){
+                if(this.dest_x > x && this.dest_x < x + w && this.dest_y > y && y < this.dest_y+ h ) {
+                	  let jumpCount = 0;
+
+                	  
+                	  jumpCount++;
+                	
+                    
+                     this.y +=10;
+                   this.y=340;
+                   let my_coin = new Coin();
+                   my_coin.draw_coin(this.count,x,y);
+                   //drawMario(4);
+                     
+
+                     
+                     
+            }
+
+//drawMario(4);
+              
+			}
+		}
+
+
+
+              }
+		}
+	}
+}
+}
+		
+	  //checks if mario is colliding
+	marioCollides(_x, _y, _w, _h){
+		     //console.log(this.x);
+		if (this.x +this.w <= _x)
+			return false;
+		if (this.x >= this._x +_w)
+			return false;
+		if (this.y + this.h <= _y)
+			return false;
+		if (this.y >=_y + _h)
+	      		return false;
+	      	
+		return true;
+	}
+
+	  //mario gets out after collision
+	 get_outblock(_x, _y, _w, _h)
+	{  
+	     
+		if(this.x + this.w >= _x  && this.prev_x + this.w < _x ){
+	           this.x =_x - this.w - 1 ; 
+	       console.log("get out from top");
+	   }
+        if(this.x <= _x + _w  && this.prev_x >_x + _w  ){
+	           this.x = _x + _w + 1;
+	       console.log("get out from top");
+	   }
+	    if(this.y + this.h >= _y && this.prev_y + this.h < _y)
+	    {  console.log("get out from top");
+		   this.y = _y - this.h -1;
+	       this.num_frame = 0;
+		   this.fall = 0;
+	    }
+	  	if(this.y <= _y + _h && this.prev_y > _y + _h)
+	  	{  console.log("get out from top");
+		  this.y = _y + _h +1; 
+		  this.fall = 0; 
+	//	  addcoin(_x, _y);
+		 
+     	}
+
+
+	}
+
+trial_getout(_x,_y,_w,_h){
+	//alert(_x + " " + _y);
+	//console.log("this y is " + this.y);
+   if(this.y <= _y + _h){
+
+   	    this.y = 0;
+   }
+}
+
+	
+
+
+isMario(){
+		return true;
+	} 
+}
+
+class Turtle
+{       
+	constructor(x, y, update_method,onclick_method)
+	{   
+		this.x = x;
+		this.y = y;
+		this.update = update_method;
+		this.onclick = onclick_method;
+		this.turtleImage= [ "flyingmario.png"];
+		this.imageturtle = this.turtleImage[0];
+		//this.x++;
+		this.image = new Image();
+		this.image.src = this.imageturtle;
+		//this.cameraPos = 0;
+	}
+	drawMario(){
+		
+		//ensures that mario is able to get 1st image if user has not preesed right key
+		
+		this.turtleImage= [ "flyingmario.png"];
+		this.imageturtle = this.turtleImage[0];
+		//this.x++;
+		this.image = new Image();
+		this.image.src = this.imageturtle;
+		
+	}
+	set_destination(x, y)
+	{
+		this.dest_x = x;
+		this.dest_y = y;
+		//Mario.prototype.set_destination(x,y);3
+		//SetT.prototype.setup(this.dest_x,this.dest_y);
+	}
+
+	ignore_click(x, y)
+	{
+	}
+
+	move(tx, ty)
+	{    
+         // alert("actual movement " + dx);
+         console.log("actual movement " + this.dest_y);
+         console.log("actual movement " + this.dest_x);
+		this.dest_x = this.x + tx;
+		this.dest_y = this.y + ty;
+		SetT.prototype.setup(this.dest_x,this.dest_y);
+		
+
+	}
+   //mario movement up and down
+	update(){
+
+        this.vert_vel = 5;
+             
+		if(this.y<=170){
+			this.y += this.vert_vel;
+		 			
+		 }
+		 this.vert_vel=0;
+		if(this.dest_x === undefined)
+			return;
+
+		if(this.x < this.dest_x){
+			this.x+=2;
+			let move = new Model();
+			move.cameraPos = this.x -180;
+		}
+		else if(this.x > this.dest_x)
+			this.x--;
+		if(this.y < this.dest_y)
+			this.y++;
+		else if(this.y > this.dest_y)
+			this.y--;
+	}
+	//controls mario jumping
+	jump(dvert_vel){
+     
+		this.vert_vel += dvert_vel;
+		this.y +=this.vert_vel;
+		let my_model = new Model();
+
+
+		for (let i=0; i<my_model.sprites.length; i++ ){
+              let b = my_model.sprites[i];
+
+              //alert(b.type);
+              if(b instanceof Brick){
+              	//alert(JSON.stringify(b));
+              	//alert(b.x);
+                  for(let j=0; j<this.obj.length; j++){
+		if(this.obj[j].type == "Brick"){
+				//console.log(this.obj[j].x);
+			let x = this.obj[j].x;
+			let y = this.obj[j].y;
+			let w = this.obj[j].w;
+			let h = this.obj[j].h;
+    
+            if(Mario.prototype.marioCollides(x,y,w,h)){
+                    console.log("my dest_x" + this.dest_x);
+                    console.log("my dest_y" + this.dest_y);
+                    console.log("my y" + y);
+                    console.log(" my x " + x);
+
+                if(this.dest_x > x && this.dest_x < x + w && this.dest_y > y && y < this.dest_y+ h ) {
+                	//alert(this.y);
+                	//if(this.y>=y)
+                     this.y=340;
+                    // alert(" new " + this.y);
+                     this.y +=10;
+            }
+
+
+               /*if(this.y <= y  ){
+                 //alert(" i hit ");
+   	             this.y+=50;
+                 }
+                }*/
+
+			}
+		}
+            
+            if(this.obj[j].type == "Coinblocks"){
+				//console.log(this.obj[j].x);
+
+			let x = this.obj[j].x;
+			let y = this.obj[j].y;
+			let w = this.obj[j].w;
+			let h = this.obj[j].h;
+    
+            if(Mario.prototype.marioCollides(x,y,w,h)){
+                    console.log("my dest_x" + this.dest_x);
+                    console.log("my dest_y" + this.dest_y);
+                    console.log("my y" + y);
+                    console.log(" my x " + x);
+
+                if(this.dest_x > x && this.dest_x < x + w && this.dest_y > y && y < this.dest_y+ h ) {
+                	  let jumpCount = 0;
+                	  this.count++;
+                	  jumpCount++;
+                	let my_coin = new Coin();
+                    my_coin.draw_coin(this.count,x,y);
+                     this.y=340;
+                   
+                     this.y +=10;
+            }
+
+
+               /*if(this.y <= y  ){
+                 //alert(" i hit ");
+   	             this.y+=50;
+                 }
+                }*/
+
+			}
+		}
+
+
+
+              }
+		}
+	}
+}
+		
+	  //checks if mario is colliding
+	marioCollides(_x, _y, _w, _h){
+		     //console.log(this.x);
+		if (this.x +this.w <= _x)
+			return false;
+		if (this.x >= this._x +_w)
+			return false;
+		if (this.y + this.h <= _y)
+			return false;
+		if (this.y >=_y + _h)
+	      		return false;
+	      	
+		return true;
+	}
+
+	  //mario gets out after collision
+	 get_outblock(_x, _y, _w, _h)
+	{  
+	     
+		if(this.x + this.w >= _x  && this.prev_x + this.w < _x ){
+	           this.x =_x - this.w - 1 ; 
+	       console.log("get out from top");
+	   }
+        if(this.x <= _x + _w  && this.prev_x >_x + _w  ){
+	           this.x = _x + _w + 1;
+	       console.log("get out from top");
+	   }
+	    if(this.y + this.h >= _y && this.prev_y + this.h < _y)
+	    {  console.log("get out from top");
+		   this.y = _y - this.h -1;
+	       this.num_frame = 0;
+		   this.fall = 0;
+	    }
+	  	if(this.y <= _y + _h && this.prev_y > _y + _h)
+	  	{  console.log("get out from top");
+		  this.y = _y + _h +1; 
+		  this.fall = 0; 
+	//	  addcoin(_x, _y);
+		 
+     	}
+
+
+	}
+
+trial_getout(_x,_y,_w,_h){
+	//alert(_x + " " + _y);
+	console.log("this y is " + this.y);
+   if(this.y <= _y + _h){
+
+   	    this.y = 0;
+   }
+}
+
+	
+
+
+isMario(){
+		return true;
+	} 
+}
+
+
+
+
+class Brick
+{
+    constructor(update_method, onclick_method)
+	{
+		var json = {"sprites":[{"type":"Mario","x":0,"y":500,"w":60,"h":95,"vert_vel":581.9999999999992},{
+	"type":"Brick","x":151,"y":280,"w":157,"h":97},
+	{"type":"Coinblocks","x":425,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":638,"y":276,"w":109,"h":48},{"type":"Brick","x":1338,"y":276,"w":109,"h":48},
+	{"type":"Coinblocks","x":1525,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":1925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":1925,"y":310,"w":109,"h":48}]};
+
+		this.obj = json.sprites;
+
+		this.update = update_method;
+		this.onclick = onclick_method;
+		//this.canvas = document.getElementById("myCanvas");
+	} 
+	ignore_click(x, y)
+	{
+	}
+
+	brick_update()
+	{   var json = {"sprites":[{"type":"Mario","x":0,"y":500,"w":60,"h":95,"vert_vel":581.9999999999992},{
+	"type":"Brick","x":151,"y":280,"w":157,"h":97},
+	{"type":"Coinblocks","x":425,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":638,"y":276,"w":109,"h":48},{"type":"Brick","x":1338,"y":276,"w":109,"h":48},
+	{"type":"Coinblocks","x":1525,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":1925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":1925,"y":310,"w":109,"h":48}]};
+
+		this.obj = json.sprites;
+		for(let j=0; j<this.obj.length; j++){
+			//console.log("the lenght of this is " +  this.obj.length);
+			if(this.obj[j].type == "Brick"){
+				//console.log(this.obj[j].x);
+				let new_Brick = new Model();
+				//console.log("this object is  " + j + " " + this.obj[j] );
+				//console.log("this object of  size " + new_Brick.sprites.length);
+				new_Brick.sprites.push(this.obj[j]); //puxhes brick into sprite array
+                //console.log("this object of  size " + new_Brick.sprites.length);
+				let x = this.obj[j].x;
+				let y = this.obj[j].y;
+				let w = this.obj[j].w;
+				let h = this.obj[j].h;
+
+				
+                let brickCanvas = document.getElementById('myCanvas')
+                 let ctx = brickCanvas.getContext('2d')
+                 View.prototype.drawBrick(ctx,brickCanvas, x,y,w,h);
+                }
+		}
+	}
+
+	isBrick(){
+
+		return true;
+	}
+}
+
+class Coinblock
+{
+	constructor( update_method,onclick_method)
+	{
+		this.update = update_method;
+		this.onclick = onclick_method;
+		this.hit=false;
+		
+	}
+
+	ignore_click(x, y)
+	{
+	}
+	async coinblock_update(x){
+		
+		let me = await new Model();
+		if(x==1){
+			const x=1;
+		}
+
+		this.coinblockImages= [ "block1.png", "block2.png"];
+		if(this.hit==true){
+		this.imageCoinblock = this.coinblockImages[1];
+         }
+		else{
+			this.imageCoinblock = this.coinblockImages[0];
+		}
+		
+	//}
+
+		this.image = new Image();
+		this.image.src = this.imageCoinblock;
+		for(let j=0; j<me.obj.length; j++){
+			//console.log("the lenght of this is " +  this.obj.length);
+			if(me.obj[j].type == "Coinblocks"){
+				//console.log(this.obj[j].x);
+				let x = me.obj[j].x;
+				let y = me.obj[j].y;
+				let w = me.obj[j].w;
+				let h = me.obj[j].h;
+
+				
+                let blockCanvas = document.getElementById('myCanvas')
+                let ctx = blockCanvas.getContext('2d')
+                this.num = 0;
+                View.prototype.drawcoinblock(this.image, x, y,blockCanvas,ctx,this.num);
+
+
+			}
+		}
+	}
+	async coinblock_new(x,y,num){
+
+		let imageCoinblock = this.coinblockImages[1];
+		let pic =  await new Image();
+		pic.src =  await imageCoinblock;
+		let block1Canvas = await  document.getElementById('myCanvas')
+                let ctx =  await block1Canvas.getContext('2d')
+                let pet=1;
+                //()
+               await View.prototype.drawcoinblock(pic, x, y,block1Canvas,ctx,pet);
+               this.hit = true;
+
+	    }
+
+    }
+
+class Coin{
+
+	constructor(update_method, onclick_method){
+		this.update = update_method;
+		this.onclick = onclick_method;
+		this.Coinvert_vel = 10;
+        this.coinImages= [ "bitcoin.png"];
+		this.imageCoin = this.coinImages[0];
+		this.image = new Image();
+		this.image.src = this.imageCoin;
+		this.count = 0;
+		
+		 this.coinCanvas =  document.getElementById('myCanvas');
+		 
+
+
+	}
+
+	coin_update(){
+             //Coin.prototype.draw_coin(jumps,x,y);
+	}
+
+async draw_coin(jumps,x,y){
+	let final_count = new Counting(0);
+	
+	if(increment<=20 && increment!=16){
+		
+        	 this.coinCanvas =  document.getElementById('myCanvas');
+                 this.ctx = await this.coinCanvas.getContext('2d');
+
+                View.prototype.drawcoin(this.image, x, y,this.coinCanvas,this.ctx);
+                  this.count++;
+
+                  //increment++;
+          
+          }
+          else{
+          	     
+          	  
+                await Coinblock.prototype.coinblock_new(x,y,jumps);
+           }
+          
+          
+	}
+
+	ignore_click(){
+
+	}
+}
+class Sound{
+	constructor(src){
+		this.sound = document.createElement("audio");
+		this.sound = new Audio();
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    
+	}
+	update(){
+		this.sound.play();
+	}
+}
+class Model
+{
+	constructor()
+	{
+		this.sprites = [];
+		this.num=0;
+		this.turtle = new Mario(80,100, Mario.prototype.update, Mario.prototype.set_destination);
+		this.sprites.push(this.turtle);
+		this.myTurtle = new Turtle(0,100, Turtle.prototype.update, Turtle.prototype.set_destination);
+		this.sprites.push(this.myTurtle);
+		this.sprites.push(new Brick(Brick.prototype.brick_update, Brick.prototype.ignore_click));
+		this.sprites.push(new Coinblock(Coinblock.prototype.coinblock_update, Coinblock.prototype.ignore_click));
+		this.sprites.push(new Coin(Coin.prototype.coin_update, Coin.prototype.ignore_click));
+		var json = {"sprites":[{"type":"Mario","x":0,"y":500,"w":60,"h":95,"vert_vel":581.9999999999992},{
+	   "type":"Brick","x":191,"y":280,"w":157,"h":97},{"type":"Coinblocks","x":455,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":938,"y":276,"w":109,"h":48},{"type":"Brick","x":1338,"y":276,"w":109,"h":48},
+	{"type":"Coinblocks","x":1525,"y":280,"w":89,"h":89},{"type":"Coinblocks","x":1925,"y":280,"w":89,"h":89},
+	{"type":"Brick","x":1925,"y":310,"w":109,"h":48}]};
+        this.obj = json.sprites;
+        this.cameraPos=0;
+       
+	}
+
+	update()
+	{
+		for(let i = 0; i < this.sprites.length; i++)
+		{
+			this.sprites[i].update();
+		}
+	}
+
+	onclick(x, y)
+	{
+		for(let i = 0; i < this.sprites.length; i++)
+		{
+			this.sprites[i].onclick(x, y);
+		}
+		
+	}
+
+	move(dx, dy)
+	{    var old_x = dx;
+		 var old_y = dy;
+		 mdest_x = dx;
+         mdest_y =dy;
+         console.log("My actual x is " + dx);
+         console.log("My actual going x is " + mdest_x);
+		 //console.log("new movement " + old_x);
+		this.turtle.move(dx, dy);
+	}
+
+	myTurtleMove(tx,ty){
+
+		this.myTurtle.move(tx,ty);
+	}
+	jump(dvert_vel,response){
+		this.turtle.jump(dvert_vel,response);
+	}
+
+	getSprite(){
+		alert(this.sprites);
+		return this.sprites;
+	}
+
+	
+}
+
+
+
+
+class View
+{
+	constructor(model,coin)
+	{   this.coin = coin;
+		this.model = model;
+		this.canvas = document.getElementById("myCanvas");
+		this.turtle = new Image();
+		this.turtle.src = "block1.png";
+		//let move = new Mario();
+		//this.counting = new Counting();
+		
+	}
+
+	update()
+	{
+		let ctx = this.canvas.getContext("2d");
+		ctx.clearRect(0, 0, 1000, 500);
+		for(let i = 0; i < this.model.sprites.length; i++)
+		{
+			let sprite = this.model.sprites[i];
+			if(sprite instanceof Mario || sprite instanceof Turtle )
+			ctx.drawImage(sprite.image, sprite.x, sprite.y);
+		    else if(sprite instanceof Brick)
+		    	Brick.prototype.brick_update();
+		    else 
+		    	Coinblock.prototype.coinblock_update(0);
+		}
+		
+	}
+
+	async drawcoin(image,x,y,coinCanvas,ctx){
+		 
+		  
+    	ctx=  coinCanvas.getContext("2d");
+    			y+=100;
+    			 ctx.drawImage(image, x, y);
+    			this.num++;
+    			increment++;
+    			console.log(increment);
+    			//Counting.prototype.constructor(yieldme);
+    		
+		
+	
+    }
+	//draw bricks on screen
+	drawBrick(ctx,brickCanvas,x,y,w,h){
+        ctx=brickCanvas.getContext("2d");
+        let my_move = new Model();
+		ctx.rect(x-my_move.cameraPos,y,w,h);
+		ctx.fillStyle = "SaddleBrown";
+        ctx.fill();
+        }
+
+    drawcoinblock(image,x,y,blockCanvas,ctx, num){
+    	if(num==0){
+    	ctx=blockCanvas.getContext("2d");
+            let my_move = new Model();
+    	 ctx.drawImage(image, x-my_move.cameraPos, y);
+         }
+
+         else{
+         	 //setInterval(ctx.clearRect(425, 280, 89, 89),55555500000);
+            //delete this.model.json["Coinblocks"];
+                Coinblock.prototype.coinblock_update(1);
+         	 //window.requestAnimationFrame(drawcoin);
+         }
+    }
+    
+}
+
+
+
+class Counting{
+	constructor(x){
+		
+		this.counting = x;
+	
+	}
+	counter(){
+		this.counting++;
+	}
+}
+
+
+
+class Controller
+{
+	constructor(model, view)
+	{
+		this.model = model;
+		this.view = view;
+		this.key_right = false;
+		this.key_left = false;
+		this.key_up = false;
+		this.key_down = false;
+		this.key_space=false;
+		let self = this;
+		view.canvas.addEventListener("click", function(event) { self.onClick(event); });
+		document.addEventListener('keydown', function(event) { self.keyDown(event); }, false);
+		document.addEventListener('keyup', function(event) { self.keyUp(event); }, false);
+
+	}
+
+	onClick(event)
+	{
+		this.model.onclick(event.pageX - this.view.canvas.offsetLeft, event.pageY - this.view.canvas.offsetTop);
+	}
+
+	keyDown(event)
+	{
+		if(event.keyCode == 39) this.key_right = true;
+		else if(event.keyCode == 37) this.key_left = true;
+		else if(event.keyCode == 38) this.key_up = true;
+		else if(event.keyCode == 40) this.key_down = true;
+		else if(event.keyCode == 32) this.key_space = true;
+	}
+	keyUp(event)
+	{
+		if(event.keyCode == 39) this.key_right = false;
+		else if(event.keyCode == 37) this.key_left = false;
+		else if(event.keyCode == 38) this.key_up = false;
+		else if(event.keyCode == 40) this.key_down = false;
+		else if(event.keyCode == 32) this.key_space = false;
+	}
+
+	update()
+	{   let me = new Sayhi();
+		 let dx = 0;
+		let dy = 0;
+		let tx =0;
+		let ty = 0;
+		 me.update();
+		 let value_saf = new Model();
+		let dvert_vel=0;
+		if(this.key_right){
+			if(myId == 0){
+		dx++;
+		//console.log("i pressed " + mdest_x);
+          }		//console.log("movement is " + dx);
+          if(myId == 1){
+          tx++;
+          }
+		} 
+		
+		Mario.prototype.drawMario(dx); 
+		if(this.key_left){
+		if(myId == 0){
+		dx--;
+		//console.log("i pressed " + mdest_x);
+          }		//console.log("movement is " + dx);
+          if(myId == 1){
+          tx--;
+          }
+		Mario.prototype.drawMario(dx); 
+		} 
+		
+
+		if(this.key_space){
+			dy=-10;
+		dvert_vel-=10; //helps mario to jump
+		let response = true;
+		//this.model.jump(dvert_vel,response);
+		}
+		if(tx !=0 || ty != 0)
+			this.model.myTurtleMove(tx,ty);
+		if(dx != 0 || dy!= 0)
+			this.model.move(dx, dy);
+	}
+}
+
+
+
+
+
+class Game
+{
+	constructor()
+	{
+		this.model = new Model();
+		this.coin = new Coin();
+		this.view = new View(this.model,this.coin);
+		this.controller = new Controller(this.model, this.view, this.mario);
+		//this.sound = new Sound("song.mp3");
+	}
+
+	onTimer()
+	{    
+		this.controller.update();
+		this.model.update();
+		this.view.update();
+        //this.sound.update();
+	}
+}
+
+
+let game = new Game();
+let timer = setInterval(function() { game.onTimer(); }, 40);
+
+async function sendMessage(){
+	count++;
+	// Make a JSON blob
+	let ob = {};
+	let msg = document.getElementById("mymessage");
+	ob.message = msg.value;
+	ob.mess_value = 1;
+	console.log("the going message is " + msg.value);
+	
+	ob.my_id = myId;
+	ob.fav_num =turtle_Destx;
+	ob.dx = new_Dest;
+	var checker =1;
+	ob.checker = checker;
+	//ob.mess_value = mess_value;
+	//ob.tx = 1;
+	console.log("going new turtle is " + ob.fav_num);
+	console.log("My actual going in send x is " + ob.dx);
+	ob.dy = mdest_y;
+     
+    let mess_string = JSON.stringify(ob);
+	console.log("The going number is " + myId);
+	// Send the JSON blob to the server
+	httpPost("ajax_handler1.html", mess_string, cb);
+///Sayhi.prototype.update();
+var element = document.getElementById('mymessage').value=" ";
+
+}
+
+function clear(){
+	document.getElementById("mymessage").value=" " ;
+	sayhi();
+	
+}
+function addMessage(mess){
+            // Number of inputs to create
+            if(mess ===undefined){
+
+            }
+            else{
+            var select = document.getElementById("chatHistory");
+            select.options[select.options.length] = new Option(mess);
+        }
+            }
+function addPlayer(myid){
+            // Number of inputs to create
+            var select = document.getElementById("chatHistory");
+            select.options[select.options.length] = new Option("Player said" + myId +"  : ");
+            }
+
+         function addPlayerOther(myid){
+            // Number of inputs to create
+            var select = document.getElementById("chatHistory");
+            select.options[select.options.length] = new Option("Other player  said : ");
+            }
+        //}
+
+</script>
+<table>
+	<tr><td>
+		<form>
+			<select id="chatHistory" size="12" style="width:100%">
+				<option>-----------Chat Message-----------</option>
+				
+			</select>
+		</form>
+	</td></tr>
+	<tr><td>
+		 <input type="text" id="mymessage" onfocus="this.value=' ' ">
+  <input type="button" onclick="sendMessage();" value="send">
+	</td></tr>
+</table>
+
+</body></html>
